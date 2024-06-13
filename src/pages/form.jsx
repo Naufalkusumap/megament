@@ -4,7 +4,73 @@ import Navbar from "../components/navbar";
 import { addAsset, uploadAssetImage, setAuthToken } from '../api/api'; // Pastikan jalur impor benar
 
 const Form = () => {
-    
+    const [formData, setFormData] = useState({
+        name: "",
+        description: "",
+        depreciation: "",
+        price: "",
+        purchaseDate: "",
+        productPhoto: null
+    });
+
+    const handleChange = (e) => {
+        const { name, value, files } = e.target;
+        if (name === "productPhoto") {
+            setFormData({
+                ...formData,
+                [name]: files ? files[0] : null,
+            });
+        } else {
+            setFormData({
+                ...formData,
+                [name]: value,
+            });
+        }
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert("No token found, please login first.");
+            return;
+        }
+        setAuthToken(token);
+
+        const assetData = {
+            name: formData.name,
+            description: formData.description,
+            depreciation: parseFloat(formData.depreciation), // Convert to float
+            price: parseFloat(formData.price), // Convert to float
+            purchaseDate: new Date(formData.purchaseDate).toISOString(), // Convert to ISO string
+            ownerId: 1, // Assuming ownerId is fixed for the example
+            isApproved: false, // Assuming default is false for new assets
+            imageURL: null,
+            qrCode: null,
+            trackerId: null
+        };
+
+        try {
+            // Kirim data aset terlebih dahulu
+            const assetResponse = await addAsset(assetData);
+            const assetId = assetResponse.id;
+
+            console.log('Asset created:', assetResponse);
+
+            // Jika ada gambar, kirim gambar menggunakan id aset yang baru dibuat
+            if (formData.productPhoto) {
+                const imageResponse = await uploadAssetImage(assetId, formData.productPhoto);
+                console.log('Image uploaded:', imageResponse);
+            }
+
+            alert("Asset added successfully!");
+        } catch (error) {
+            console.error('Error:', error.response ? error.response.data : error.message);
+            alert("Failed to add asset.");
+        }
+    };
+
     return (
         <div className="flex flex-col h-screen">
             <Navbar />
@@ -24,6 +90,8 @@ const Form = () => {
                                     <input
                                         type="text"
                                         name="name"
+                                        value={formData.name}
+                                        onChange={handleChange}
                                         className="w-full p-2 border rounded"
                                     />
                                 </div>
@@ -32,6 +100,8 @@ const Form = () => {
                                     <input
                                         type="text"
                                         name="description"
+                                        value={formData.description}
+                                        onChange={handleChange}
                                         className="w-full p-2 border rounded"
                                     />
                                 </div>
@@ -40,6 +110,8 @@ const Form = () => {
                                     <input
                                         type="text"
                                         name="depreciation"
+                                        value={formData.depreciation}
+                                        onChange={handleChange}
                                         className="w-full p-2 border rounded"
                                     />
                                 </div>
@@ -48,6 +120,8 @@ const Form = () => {
                                     <input
                                         type="text"
                                         name="price"
+                                        value={formData.price}
+                                        onChange={handleChange}
                                         className="w-full p-2 border rounded"
                                     />
                                 </div>
@@ -56,6 +130,8 @@ const Form = () => {
                                     <input
                                         type="date"
                                         name="purchaseDate"
+                                        value={formData.purchaseDate}
+                                        onChange={handleChange}
                                         className="w-full p-2 border rounded"
                                     />
                                 </div>
@@ -64,6 +140,7 @@ const Form = () => {
                                     <input
                                         type="file"
                                         name="productPhoto"
+                                        onChange={handleChange}
                                         className="w-full p-2 border rounded"
                                     />
                                 </div>
