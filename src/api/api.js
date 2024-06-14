@@ -68,7 +68,7 @@ export const addAsset = async (data) => {
 export const uploadAssetImage = async (id, image) => {
   try {
     const formData = new FormData();
-    formData.append('image', image);
+    formData.append('file', image);
 
     const response = await api.post(`/assets/${id}/image`, formData, {
       headers: {

@@ -49,12 +49,12 @@ const Form = () => {
         try {
             // Kirim data aset terlebih dahulu
             const assetResponse = await addAsset(assetData);
-            const assetId = assetResponse.id;
+            const assetId = assetResponse.data.id;
 
             console.log('Asset created:', assetResponse);
 
             // Jika ada gambar, kirim gambar menggunakan id aset yang baru dibuat
-            if (formData.productPhoto) {
+            if (formData.productPhoto && assetId) {
                 const imageResponse = await uploadAssetImage(assetId, formData.productPhoto);
                 console.log('Image uploaded:', imageResponse);
             }
