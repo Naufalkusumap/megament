@@ -85,7 +85,7 @@ export const uploadAssetImage = async (id, image) => {
 // Fungsi untuk menyetujui aset
 export const approveAsset = async (id) => {
   try {
-    const response = await api.post(`/assets/${id}/approve`);
+    const response = await api.patch(`/assets/${id}/approve`);
     return response.data;
   } catch (error) {
     console.error('Failed to approve asset:', error);
