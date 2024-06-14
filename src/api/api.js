@@ -17,7 +17,20 @@ export const setAuthToken = (token) => {
   }
 };
 
-// Fungsi untuk memanggil data aset
+// Fungsi untuk mendapatkan riwayat tracker
+export const getTrackerHistory = async (trackerId, take = 10, page = 1) => {
+  try {
+    const response = await api.get(`/trackers/history/${trackerId}`, {
+      params: { take, page }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Failed to fetch tracker history:', error);
+    throw error;
+  }
+};
+
+// Fungsi untuk memanggil data aset yang disetujui
 export const getAssets = async () => {
   try {
     const response = await api.get('/assets/approved');
@@ -28,10 +41,22 @@ export const getAssets = async () => {
   }
 };
 
+// Fungsi untuk memanggil data aset yang belum disetujui
+export const getUnapprovedAssets = async () => {
+  try {
+    const response = await api.get('/assets/unapproved');
+    console.log("API response:", response.data); // Log respons API
+    return response.data;
+  } catch (error) {
+    console.error('Failed to fetch unapproved assets:', error);
+    throw error;
+  }
+};
+
 // Fungsi untuk menambahkan aset baru
 export const addAsset = async (data) => {
   try {
-    const response = await api.post('/assets/', data);
+    const response = await api.post('/assets', data); // Menghapus trailing slash
     return response.data;
   } catch (error) {
     console.error('Failed to add asset:', error);
@@ -53,6 +78,41 @@ export const uploadAssetImage = async (id, image) => {
     return response.data;
   } catch (error) {
     console.error('Failed to upload asset image:', error);
+    throw error;
+  }
+};
+
+// Fungsi untuk menyetujui aset
+export const approveAsset = async (id) => {
+  try {
+    const response = await api.post(`/assets/${id}/approve`);
+    return response.data;
+  } catch (error) {
+    console.error('Failed to approve asset:', error);
+    throw error;
+  }
+};
+
+// Fungsi untuk mendapatkan data history
+export const getHistory = async (trackerId, take = 10, page = 1) => {
+  try {
+    const response = await api.get(`/trackers/history/${trackerId}`, {
+      params: { take, page }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Failed to fetch history:', error);
+    throw error;
+  }
+};
+
+// Fungsi untuk menolak aset (menghapus aset)
+export const declineAsset = async (id) => {
+  try {
+    const response = await api.delete(`/assets/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error('Failed to decline asset:', error);
     throw error;
   }
 };

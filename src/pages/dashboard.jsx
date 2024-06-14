@@ -78,7 +78,7 @@ function Dashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {assets.map((asset, index) => (
+                    {assets.data.map((asset, index) => (
                       <tr key={asset.id}>
                         <td className="border border-gray-500 p-2">{index + 1}</td>
                         <td className="border border-gray-500 p-2">{asset.name}</td>

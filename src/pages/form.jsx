@@ -44,11 +44,6 @@ const Form = () => {
             depreciation: parseFloat(formData.depreciation), // Convert to float
             price: parseFloat(formData.price), // Convert to float
             purchaseDate: new Date(formData.purchaseDate).toISOString(), // Convert to ISO string
-            ownerId: 1, // Assuming ownerId is fixed for the example
-            isApproved: false, // Assuming default is false for new assets
-            imageURL: null,
-            qrCode: null,
-            trackerId: null
         };
 
         try {
